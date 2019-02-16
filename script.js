@@ -36,6 +36,9 @@ let [cursorX, cursorY] = [Ball.x, Ball.y];
 let cursorDown = false;
 let ballMoving = false;
 let gameOver = false;
+let missedCount = 0;
+let ticker = 0;
+let dir = 1;
 
 
 // Functions to help with ball moving
@@ -53,7 +56,17 @@ function updateCoords() {
   Ball.ay = 9.81/10;
   Ball.ax = Ball.vx*0.01;  
   Ball.vy -= Ball.ay;
-  Ball.vx -= Ball.ax; 
+  Ball.vx -= Ball.ax;
+}
+
+function ballSwing() {
+  magnitude = Math.min(missedCount/20, 10);
+  [Ball.x, Ball.y] = [Ball.x + dir*magnitude*Math.pow(Math.cos(ticker*Math.PI/180),2), Ball.y - magnitude*Math.sin(ticker*Math.PI/180)];
+  ticker ++;
+  if (ticker > 360) {
+    ticker = 0;
+    dir = -dir
+  }
 }
 
 function outOfBounds(){
@@ -62,6 +75,8 @@ function outOfBounds(){
     document.getElementById("whistle").play();
     resetBall(Ball);
     ballMoving = false;
+    missedCount ++;
+    ticker = 0;
   }  
 }
 
@@ -157,6 +172,7 @@ function draw(){
   ctx.fillStyle = "orange";
   ctx.fill();
   drawCup(Cup);
+  ballSwing();
   if(cursorDown) drawLine();
   if(ballMoving) {
     collisionDetection(Cup);
