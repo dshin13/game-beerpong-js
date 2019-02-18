@@ -10,15 +10,29 @@ const ctx = canvas.getContext('2d');
 
 // Game objects
 
-const Cup = {
-  x0: 7*width/8,
-  x1: 7.5*width/8,
-  y0: 5*height/8,
-  y1: 7*height/8,
-  b: 6.5*height/8,
-  inPlay: true,
-  won: false
+class Game {
+    constructor() {
+        this.gameOver = false;
+    }
 }
+
+
+class Cup {
+    constructor(x, y) {
+        this.x0 = 7*width/8 + x;
+        this.x1 = 7.5*width/8;
+        this.y0 = 5*height/8;
+        this.y1 = 7*height/8;
+        this.b = 6.5*height/8;
+        this.inPlay = true;
+    }
+    
+    knockOut() {
+        this.inPlay = false;
+    }
+
+}
+
 
 const Ball = {
   x: height/2,
@@ -179,7 +193,7 @@ function draw(){
     updateCoords();
     outOfBounds();
   }
-  if(Ball.won) {
+  if(gameOver) {
     drawSwoosh();
     gameEnded();
   }
